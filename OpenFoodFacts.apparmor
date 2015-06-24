@@ -1,9 +1,8 @@
 {
     "policy_groups": [
         "networking",
-        "webview"
+        "webview",
+        "camera"
     ],
     "policy_version": 1.3
 }
-
-

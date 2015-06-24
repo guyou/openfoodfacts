@@ -18,10 +18,11 @@ MainView {
     */
     //automaticOrientation: true
 
-    width: units.gu(100)
-    height: units.gu(75)
+    width: units.gu(60)
+    height: units.gu(90)
 
     PageStack {
+
         id: pageStack
         Component.onCompleted: push(pageMain)
         Page {
@@ -35,9 +36,10 @@ MainView {
                 text: i18n.tr("Take a picture")
 
                 onClicked: {
-                    var barcodeValue = "3029330003533";
+                    /*var barcodeValue = "3029330003533";
                     console.log("picture tooken with barcode = " + barcodeValue);
-                    pageStack.push(Qt.resolvedUrl("qml/ProductView.qml"), {"barcode": barcodeValue});
+                    pageStack.push(Qt.resolvedUrl("qml/ProductView.qml"), {"barcode": barcodeValue});*/
+                    pageStack.push(Qt.resolvedUrl("qml/TakePicture.qml"));
                 }
             }
 
