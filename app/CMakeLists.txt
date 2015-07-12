@@ -1,28 +1,27 @@
-file(GLOB QML_JS_FILES *.qml *.js)
-add_subdirectory(qml)
+### Application binary
+
+include_directories(
+  /usr/include/zbar
+)
 
 set(tagger_SRCS
   main.cpp
   qrcodereader.cpp
   qrcodegenerator.cpp
   qrcodeimageprovider.cpp
-  historymodel.cpp
 )
 
-# Make the files visible on qtcreator
-add_custom_target(openfoodfacts_QMlFiles ALL SOURCES ${QML_JS_FILES})
+add_executable(tagger ${tagger_SRCS})
+qt5_use_modules(tagger Gui Quick Qml)
+target_link_libraries(tagger -lzbar -lqrencode)
+install(TARGETS tagger RUNTIME DESTINATION ".")
 
-# Substitute variables in the desktop file
-configure_file(${DESKTOP_FILE_NAME}.in ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME}.in)
+add_subdirectory(qml)
+if(NOT "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+add_custom_target(tagger-qmlfiles ALL
+    COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/qml ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${QMLFILES}
+)
+endif(NOT "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE_NAME} DESTINATION ${DESKTOP_DIR})
-install(FILES ${QML_JS_FILES} DESTINATION ${OPENFOODFACTS_DIR})
-
-# Make the autpilot files visible in qtcreator
-file(GLOB_RECURSE AUTOPILOT_TEST_FILES *.py)
-add_custom_target(openfoodfacts_AutopilotFiles ALL SOURCES ${AUTOPILOT_TEST_FILES})
-
-# Make the unit test files visible in qtcreator
-file(GLOB_RECURSE UNIT_TEST_FILES tests/unit/*.qml)
-add_custom_target(openfoodfacts_UnitTestFiles ALL SOURCES ${UNIT_TEST_FILES})
 

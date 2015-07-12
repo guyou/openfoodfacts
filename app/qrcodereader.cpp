@@ -28,8 +28,6 @@
 #include <QDebug>
 #include <QUrlQuery>
 #include <QQuickItem>
-#include <QSettings>
-#include <QStandardPaths>
 
 QRCodeReader::QRCodeReader(QObject *parent) :
     QObject(parent),
@@ -46,8 +44,6 @@ QRCodeReader::QRCodeReader(QObject *parent) :
             m_mainWindow = quickWin;
         }
     }
-
-    m_historyModel = new HistoryModel(this);
 
     connect(&m_readerThread, &QThread::started, this, &QRCodeReader::scanningChanged);
     connect(&m_readerThread, &QThread::finished, this, &QRCodeReader::scanningChanged);
@@ -126,7 +122,7 @@ void QRCodeReader::grab()
     connect(reader, SIGNAL(resultReady(QString, QString, QImage)), this, SLOT(handleResults(QString, QString, QImage)));
     m_readerThread.start();
 
-    QMetaObject::invokeMethod(reader, "doWork", Q_ARG(QImage, img), Q_ARG(bool, false));
+    QMetaObject::invokeMethod(reader, "doWork", Q_ARG(QImage, img));
 }
 
 void QRCodeReader::processImage(const QUrl &url)
@@ -144,7 +140,7 @@ void QRCodeReader::processImage(const QUrl &url)
     connect(reader, SIGNAL(resultReady(QString, QString, QImage)), this, SLOT(handleResults(QString, QString, QImage)));
     m_readerThread.start();
 
-    QMetaObject::invokeMethod(reader, "doWork", Q_ARG(QImage, image), Q_ARG(bool, false));
+    QMetaObject::invokeMethod(reader, "doWork", Q_ARG(QImage, image));
 }
 
 void QRCodeReader::handleResults(const QString &type, const QString &text, const QImage &codeImage)
@@ -154,17 +150,11 @@ void QRCodeReader::handleResults(const QString &type, const QString &text, const
     m_image = codeImage;
     m_imageUuid = QUuid::createUuid();
     emit validChanged();
-    m_historyModel->add(text, type, codeImage);
 }
 
-void Reader::doWork(const QImage &image, bool invert)
+void Reader::doWork(const QImage &image)
 {
-    // Prepare image
-    QImage copy = image;
-    if (invert) {
-        copy.invertPixels();
-    }
-    zbar::QZBarImage img(copy.convertToFormat(QImage::Format_RGB32));
+    zbar::QZBarImage img(image.convertToFormat(QImage::Format_RGB32));
     zbar::Image tmp = img.convert(*(long*)"Y800");
 
     // create a reader
@@ -177,12 +167,6 @@ void Reader::doWork(const QImage &image, bool invert)
 
     // scan the image for barcodes
     int n = scanner.scan(tmp);
-    qDebug() << "scanned. have" << n << "symbols";
-    if (!invert && n == 0) {
-        // Nothing found... try again inverted
-        doWork(image, true);
-        return;
-    }
 
     img.set_symbols(tmp.get_symbols());
 
@@ -226,10 +210,4 @@ void Reader::doWork(const QImage &image, bool invert)
     img.set_data(NULL, 0);
 
     emit finished();
-}
-
-HistoryModel *QRCodeReader::history() const
-{
-    qDebug() << "history model requested..." << m_historyModel->rowCount(QModelIndex());
-    return m_historyModel;
 }

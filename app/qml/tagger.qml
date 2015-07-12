@@ -19,18 +19,18 @@
  ****************************************************************************/
 
 import QtQuick 2.0
-import Ubuntu.Components 1.2
+import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0
 import Ubuntu.Components.Popups 1.0
-import QtMultimedia 5.4
+import QtMultimedia 5.0
 import QtQuick.Window 2.0
 import Ubuntu.Content 0.1
-import OpenFoodFacts 1.0
+import Tagger 0.1
 
 MainView {
     id: mainView
 
-    applicationName: "com.ubuntu.developer.mzanetti.tagger"
+    applicationName: "OpenFoodFacts"
 
     //automaticOrientation: true
 
@@ -41,6 +41,7 @@ MainView {
     width: units.gu(40)
     height: units.gu(68)
 
+    useDeprecatedToolbar: false
     PageStack {
         id: pageStack
         Component.onCompleted: {
@@ -88,17 +89,6 @@ MainView {
             pageStack.pop();
             pageStack.push(generateCodeComponent, {transfer: transfer})
         }
-        onImportRequested: {
-            print("**** import Requested")
-            var filePath = String(transfer.items[0].url).replace('file://', '')
-            qrCodeReader.processImage(filePath);
-        }
-
-        onShareRequested: {
-            print("***** share requested", transfer)
-            var filePath = String(transfer.items[0].url).replace('file://', '')
-            qrCodeReader.processImage(filePath);
-        }
     }
 
     property list<ContentItem> importItems
@@ -119,16 +109,11 @@ MainView {
     Connections {
         target: mainView.activeTransfer
         onStateChanged: {
-            switch (mainView.activeTransfer.state) {
-            case ContentTransfer.Charged:
+            if (mainView.activeTransfer.state === ContentTransfer.Charged) {
                 print("should process", activeTransfer.items[0].url)
                 mainView.decodingImage = true;
                 qrCodeReader.processImage(activeTransfer.items[0].url);
                 mainView.activeTransfer = null;
-                break;
-            case ContentTransfer.Aborted:
-                mainView.activeTransfer = null;
-                break;
             }
         }
     }
@@ -162,17 +147,13 @@ MainView {
     Component {
         id: qrCodeReaderComponent
 
-        PageWithBottomEdge {
+        Page {
             id: qrCodeReaderPage
             // TRANSLATORS: Title of the main page of the app, when the camera is active and scanning for codes
             title: i18n.tr("Scan code")
             signal codeParsed(string type, string text)
 
             property var aboutPopup: null
-
-            Component.onCompleted: {
-                qrCodeReader.scanRect = Qt.rect(mainView.mapFromItem(videoOutput, 0, 0).x, mainView.mapFromItem(videoOutput, 0, 0).y, videoOutput.width, videoOutput.height)
-            }
 
             head {
                 actions: [
@@ -193,28 +174,8 @@ MainView {
                 ]
             }
 
-            bottomEdgeTitle: i18n.tr("Previously scanned")
-
-            bottomEdgePageComponent: Component {
-                Page {
-                    title: i18n.tr("Previously scanned")
-                    ListView {
-                        anchors.fill: parent
-                        model: qrCodeReader.history
-                        delegate: Subtitled {
-                            text: model.text
-                            subText: model.type + " - " + model.timestamp
-                            iconSource: model.imageSource
-                            onClicked: {
-                                pageStack.push(resultsPageComponent, {type: model.type, text: model.text, imageSource: model.imageSource})
-                            }
-                            removable: true
-                            onItemRemoved: {
-                                qrCodeReader.history.remove(index)
-                            }
-                        }
-                    }
-                }
+            Component.onCompleted: {
+                qrCodeReader.scanRect = Qt.rect(mainView.mapFromItem(videoOutput, 0, 0).x, mainView.mapFromItem(videoOutput, 0, 0).y, videoOutput.width, videoOutput.height)
             }
 
             Camera {
@@ -224,13 +185,6 @@ MainView {
 
                 focus.focusMode: Camera.FocusContinuous
                 focus.focusPointMode: Camera.FocusPointAuto
-
-                /* Use only digital zoom for now as it's what phone cameras mostly use.
-                       TODO: if optical zoom is available, maximumZoom should be the combined
-                       range of optical and digital zoom and currentZoom should adjust the two
-                       transparently based on the value. */
-                property alias currentZoom: camera.digitalZoom
-                property alias maximumZoom: camera.maximumDigitalZoom
 
                 function startAndConfigure() {
                     start();
@@ -253,7 +207,7 @@ MainView {
                          && !mainView.decodingImage
                          && mainView.activeTransfer == null
                 onTriggered: {
-                    if (!qrCodeReader.scanning && qrCodeReaderPage.isCollapsed) {
+                    if (!qrCodeReader.scanning) {
                         print("capturing");
                         qrCodeReader.grab();
                     }
@@ -279,32 +233,7 @@ MainView {
                 source: camera
                 focus: visible
                 visible: pageStack.depth == 1 && !mainView.decodingImage
-
             }
-            PinchArea {
-                id: pinchy
-                anchors.fill: parent
-
-                property real initialZoom
-                property real minimumScale: 0.3
-                property real maximumScale: 3.0
-                property bool active: false
-
-                onPinchStarted: {
-                    print("pinch started!")
-                    active = true;
-                    initialZoom = camera.currentZoom;
-                }
-                onPinchUpdated: {
-                    print("pinch updated")
-                    var scaleFactor = MathUtils.projectValue(pinch.scale, 1.0, maximumScale, 0.0, camera.maximumZoom);
-                    camera.currentZoom = MathUtils.clamp(initialZoom + scaleFactor, 1, camera.maximumZoom);
-                }
-                onPinchFinished: {
-                    active = false;
-                }
-            }
-
             ActivityIndicator {
                 anchors.centerIn: parent
                 running: mainView.decodingImage
@@ -326,11 +255,8 @@ MainView {
             property string type
             property string text
             property string imageSource
-            onTextChanged: console.log("text changed : "+resultsPage.text);
 
-
-            property bool isUrl: (resultsPage.text.indexOf("http://") === 0 || resultsPage.text.indexOf("https://") === 0)
-            property bool isPhoneNumber: resultsPage.text.indexOf("tel:") == 0
+            property bool isUrl: resultsPage.text.indexOf("http://") > -1
 
             Flickable {
                 anchors.fill: parent
@@ -427,16 +353,7 @@ MainView {
                         width: parent.width
                         text: i18n.tr("Search online")
                         visible: !resultsPage.isUrl
-                        onClicked: Qt.openUrlExternally("https://duckduckgo.com/?q=" + resultsPage.text)
-                    }
-
-                    Button {
-                        width: parent.width
-                        text: i18n.tr("Call number")
-                        visible: resultsPage.isPhoneNumber
-                        onClicked: {
-                            Qt.openUrlExternally("tel:///" + resultsPage.text)
-                        }
+                        onClicked: Qt.openUrlExternally("https://www.google.com/search?client=ubuntu&q=" + resultsPage.text)
                     }
 
                     Button {

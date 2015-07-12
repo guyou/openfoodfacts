@@ -5,7 +5,6 @@
 #include <QDebug>
 #include <QPainter>
 #include <QStandardPaths>
-#include <QDir>
 
 QRCodeGenerator::QRCodeGenerator(QObject *parent) :
     QObject(parent)
@@ -36,12 +35,8 @@ QImage QRCodeGenerator::generateCode(const QString &text)
 QString QRCodeGenerator::generateCode(const QString &fileName, const QString &text)
 {
     QImage img = generateCode(text);
-    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/";
-    QDir cacheDir(path);
-    if (!cacheDir.exists()) {
-        cacheDir.mkpath(path);
-    }
-    qDebug() << "storing to" << path + fileName;
-    qDebug() << img.save(path + fileName);
-    return path + fileName;
+    QString path = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first() + "/" + fileName;
+    qDebug() << "storing to" << path;
+    img.save(path);
+    return path;
 }

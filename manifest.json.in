@@ -1,17 +1,15 @@
 {
-    "name": "@APP_ID@",
-    "description": "description of openfoodfacts",
     "architecture": "@CLICK_ARCH@",
-    "title": "@APP_NAME@",
+    "description": "Read and create QR code and barcode tags.",
+    "framework": "ubuntu-sdk-15.04",
     "hooks": {
-        "OpenFoodFacts": {
-            "apparmor": "OpenFoodFacts.apparmor",
-            "desktop":  "OpenFoodFacts.desktop"
+        "tagger": {
+            "apparmor": "tagger.apparmor",
+            "desktop": "tagger.desktop"
         }
     },
-    "version": "0.1",
-    "maintainer": "Ubuntouch fr <your@mail.com>",
-    "framework" : "ubuntu-sdk-15.04"
+    "maintainer": "Michael Zanetti <michael.zanetti@canonical.com>",
+    "name": "com.ubuntu.developer.mzanetti.tagger",
+    "title": "Tagger",
+    "version": "0.5.2.0"
 }
-
-

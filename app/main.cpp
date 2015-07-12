@@ -38,11 +38,9 @@ int main(int argc, char *argv[])
     view.engine()->rootContext()->setContextProperty("qrCodeReader", &reader);
 
     qmlRegisterType<QRCodeGenerator>("Tagger", 0, 1, "QRCodeGenerator");
-    qmlRegisterUncreatableType<HistoryModel>("Tagger", 0, 1, "HistoryModel", "use qrCodeReader.history");
 
     view.engine()->addImageProvider(QStringLiteral("qrcode"), new QRCodeImageProvider);
     view.engine()->addImageProvider(QStringLiteral("reader"), &reader);
-    view.engine()->addImageProvider(QStringLiteral("history"), reader.history());
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setSource(QUrl::fromLocalFile("app/qml/tagger.qml"));
