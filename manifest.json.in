@@ -4,8 +4,8 @@
     "framework": "ubuntu-sdk-15.04",
     "hooks": {
         "tagger": {
-            "apparmor": "tagger.apparmor",
-            "desktop": "tagger.desktop"
+            "apparmor": "OpenFoodFacts.apparmor",
+            "desktop": "OpenFoodFacts.desktop"
         }
     },
     "maintainer": "Michael Zanetti <michael.zanetti@canonical.com>",
