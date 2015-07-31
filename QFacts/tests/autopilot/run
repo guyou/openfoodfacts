@@ -7,5 +7,5 @@ fi
 
 SCRIPTPATH=`dirname $0`
 pushd ${SCRIPTPATH}
-autopilot3 run openfoodfacts
+autopilot3 run QFacts
 popd

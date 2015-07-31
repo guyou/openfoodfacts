@@ -2,7 +2,7 @@
 
 from autopilot.matchers import Eventually
 from testtools.matchers import Equals
-from openfoodfacts import tests
+from QFacts import tests
 
 
 class MainViewTestCase(tests.BaseTestCase):
