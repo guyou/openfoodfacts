@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/ListItemWithActions.qml</file>
+        <file>qml/ListItemWithActionsCheckBox.qml</file>
+    </qresource>
+</RCC>

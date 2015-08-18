@@ -10,7 +10,7 @@
             "content-hub": "OpenFoodFacts/hub.json"
         }
     },
-    "version": "0.2",
+    "version": "0.4",
     "maintainer": "Ubuntouch-fr team <your@mail.com>",
     "framework": "ubuntu-sdk-15.04"
 }
