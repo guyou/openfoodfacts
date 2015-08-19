@@ -4,11 +4,11 @@ An implementation of OpenFoodFacts database to Ubuntu touch devices.
 #Dependences
 Don't forget to install dependences because the barcode detector use static linkage
 
-`sudo apt-get install libzbar0 zbar-tools  libzbar-dev libv4l-dev libqrencode-dev`
+`sudo apt-get install libjpeg-dev libzbar0 zbar-tools  libzbar-dev libv4l-dev libqrencode-dev`
 
 If you want publish your application on smartphone, don't forget to install dependences on your kit  
 qt creator -> option -> ubuntu -> choose your click and click on "maintain"  
-`sudo apt-get install libzbar0:armhf zbar-tools:armhf  libzbar-dev:armhf libv4l-dev:armhf libqrencode-dev:armhf`
+`sudo apt-get install libjpeg-dev:armhf libzbar0:armhf zbar-tools:armhf  libzbar-dev:armhf libv4l-dev:armhf libqrencode-dev:armhf`
 after executing this, in your regular console execute : 
 `click-chroot-agent -r` it will reload your qtcreator (sort of)
 
