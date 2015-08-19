@@ -6,7 +6,8 @@
     "hooks": {
         "OpenFoodFacts": {
             "apparmor": "OpenFoodFacts.apparmor",
-            "desktop": "OpenFoodFacts.desktop"
+            "desktop": "OpenFoodFacts.desktop",
+"content-hub": "hub.json"
         }
     },
     "version": "0.4",
