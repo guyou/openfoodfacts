@@ -17,13 +17,14 @@ import QtQuick.Window 2.0
 
 Page {
     id: grabCodePage
-    title: i18n.tr("Scan QR code")
+    title: i18n.tr("Barcode Reader")
 
     QRCodeReader {
         id: qrCodeReader
 
         onValidChanged: {
             if (valid) {
+                console.log("tag found in qml : "+ qrCodeReader.text);
                 /*var account = accounts.createAccount();
                     account.name = qrCodeReader.accountName;
                     account.type = qrCodeReader.type;
@@ -51,7 +52,7 @@ Page {
 
     Timer {
         id: captureTimer
-        interval: 3000
+        interval: 1500
         repeat: true
         onTriggered: {
             print("capturing");
@@ -70,7 +71,7 @@ Page {
         focus: visible
 
     }
-    Label {
+    /*Label {
         anchors {
             left: parent.left
             top: parent.top
@@ -81,28 +82,7 @@ Page {
         wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         fontSize: "large"
-    }
-
-
-
-
-    Connections {
-        target: qrCodeReader
-
-        onScanningChanged: {
-            if (!qrCodeReader.scanning) {
-                mainView.decodingImage = false;
-            }
-        }
-
-        onValidChanged: {
-            if (qrCodeReader.valid) {
-                console.log("tag found in qml : "+ qrCodeReader.text);
-                // pageStack.pop();
-                //pageStack.push(resultsPageComponent, {type: qrCodeReader.type, text: qrCodeReader.text, imageSource: qrCodeReader.imageSource});
-            }
-        }
-    }
+    }*/
 
     Component.onCompleted: {
         qrCodeReader.scanRect = Qt.rect(mainView.mapFromItem(videoOutput, 0, 0).x, mainView.mapFromItem(videoOutput, 0, 0).y, videoOutput.width, videoOutput.height)
