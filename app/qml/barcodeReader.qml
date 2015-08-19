@@ -14,6 +14,7 @@ import CodeReader 1.0
 import QtQuick.Window 2.0
 
 
+
 Page {
     id: grabCodePage
     title: i18n.tr("Scan QR code")
@@ -80,6 +81,27 @@ Page {
         wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         fontSize: "large"
+    }
+
+
+
+
+    Connections {
+        target: qrCodeReader
+
+        onScanningChanged: {
+            if (!qrCodeReader.scanning) {
+                mainView.decodingImage = false;
+            }
+        }
+
+        onValidChanged: {
+            if (qrCodeReader.valid) {
+                console.log("tag found in qml : "+ qrCodeReader.text);
+                // pageStack.pop();
+                //pageStack.push(resultsPageComponent, {type: qrCodeReader.type, text: qrCodeReader.text, imageSource: qrCodeReader.imageSource});
+            }
+        }
     }
 
     Component.onCompleted: {

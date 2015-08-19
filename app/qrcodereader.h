@@ -71,6 +71,7 @@ public slots:
 
 signals:
     void resultReady(const QString &type, const QString &text);
+     void finished();
 };
 
 #endif // QRCODEREADER_H

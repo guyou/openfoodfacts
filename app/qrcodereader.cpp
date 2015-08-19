@@ -99,6 +99,8 @@ void QRCodeReader::grab()
 
 void QRCodeReader::handleResults(const QString &type, const QString &text)
 {
+    m_type = type;
+    m_text = text;
     qDebug() << "parsed:" << type << text;
     emit validChanged();
 }
@@ -136,5 +138,7 @@ void Reader::doWork(const QImage &image)
 
     tmp.set_data(NULL, 0);
     img.set_data(NULL, 0);
+
+    emit finished();
 
 }
