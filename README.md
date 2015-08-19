@@ -9,6 +9,8 @@ Don't forget to install dependences because the barcode detector use static link
 If you want publish your application on smartphone, don't forget to install dependences on your kit  
 qt creator -> option -> ubuntu -> choose your click and click on "maintain"  
 `sudo apt-get install libzbar0:armhf zbar-tools:armhf  libzbar-dev:armhf libv4l-dev:armhf libqrencode-dev:armhf`
+after executing this, in your regular console execute : 
+`click-chroot-agent -r` it will reload your qtcreator (sort of)
 
 # Api Official Documentation
 The official documentation for API : http://en.wiki.openfoodfacts.org/Project:API
