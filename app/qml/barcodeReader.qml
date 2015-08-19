@@ -14,79 +14,85 @@ import CodeReader 1.0
 import QtQuick.Window 2.0
 
 
-    Page {
-        id: grabCodePage
-        title: i18n.tr("Scan QR code")
+Page {
+    id: grabCodePage
+    title: i18n.tr("Scan QR code")
 
-        QRCodeReader {
-            id: qrCodeReader
+    QRCodeReader {
+        id: qrCodeReader
 
-            onValidChanged: {
-                if (valid) {
-                    /*var account = accounts.createAccount();
+        onValidChanged: {
+            if (valid) {
+                /*var account = accounts.createAccount();
                     account.name = qrCodeReader.accountName;
                     account.type = qrCodeReader.type;
                     account.secret = qrCodeReader.secret;
                     account.counter = qrCodeReader.counter;
                     account.timeStep = qrCodeReader.timeStep;
                     account.pinLength = qrCodeReader.pinLength;*/
-                    //pageStack.pop();
-                }
+                //pageStack.pop();
             }
         }
+    }
 
-        Camera {
-            id: camera
+    Camera {
+        id: camera
 
-            flash.mode: Camera.FlashTorch
+        flash.mode: Camera.FlashTorch
 
-            focus.focusMode: Camera.FocusContinuous
-            focus.focusPointMode: Camera.FocusPointAuto
+        focus.focusMode: Camera.FocusContinuous
+        focus.focusPointMode: Camera.FocusPointAuto
 
-            Component.onCompleted: {
-                captureTimer.start()
-            }
+        Component.onCompleted: {
+            captureTimer.start()
         }
+    }
 
-        Timer {
-            id: captureTimer
-            interval: 3000
-            repeat: true
-            onTriggered: {
-                print("capturing");
-                qrCodeReader.grab();
-            }
+    Timer {
+        id: captureTimer
+        interval: 3000
+        repeat: true
+        onTriggered: {
+            print("capturing");
+            qrCodeReader.grab();
         }
+    }
 
-        VideoOutput {
-            anchors {
-                fill: parent
-            }
-            fillMode: Image.PreserveAspectCrop
-            orientation: device.naturalOrientation === "portrait"  ? -90 : 0
-            source: camera
-            focus: visible
-
+    VideoOutput {
+        id:videoOutput
+        anchors {
+            fill: parent
         }
-        Label {
-            anchors {
-                left: parent.left
-                top: parent.top
-                right: parent.right
-                margins: units.gu(1)
-            }
-            text: i18n.tr("Scan a QR Code containing account information")
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
-            fontSize: "large"
-        }
-        // We must use Item element because Screen component does not work with QtObject
-        Item {
-            id: device
-            property string naturalOrientation: Screen.primaryOrientation == Qt.LandscapeOrientation ? "landscape" : "portrait"
-            visible: false
-        }
+        fillMode: Image.PreserveAspectCrop
+        orientation: device.naturalOrientation === "portrait"  ? -90 : 0
+        source: camera
+        focus: visible
 
     }
+    Label {
+        anchors {
+            left: parent.left
+            top: parent.top
+            right: parent.right
+            margins: units.gu(1)
+        }
+        text: i18n.tr("Scan a QR Code containing account information")
+        wrapMode: Text.WordWrap
+        horizontalAlignment: Text.AlignHCenter
+        fontSize: "large"
+    }
+
+    Component.onCompleted: {
+        qrCodeReader.scanRect = Qt.rect(mainView.mapFromItem(videoOutput, 0, 0).x, mainView.mapFromItem(videoOutput, 0, 0).y, videoOutput.width, videoOutput.height)
+    }
+
+    // We must use Item element because Screen component does not work with QtObject
+    Item {
+        id: device
+        property string naturalOrientation: Screen.primaryOrientation == Qt.LandscapeOrientation ? "landscape" : "portrait"
+        visible: false
+    }
+
+}
 
 

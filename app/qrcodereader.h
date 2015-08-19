@@ -34,6 +34,7 @@ class QRCodeReader : public QObject
     Q_PROPERTY(quint64 counter READ counter NOTIFY validChanged)
     Q_PROPERTY(int timeStep READ timeStep NOTIFY validChanged)
     Q_PROPERTY(int pinLength READ pinLength NOTIFY validChanged)
+    Q_PROPERTY(QRect scanRect READ scanRect WRITE setScanRect NOTIFY scanRectChanged)
 
 public:
     explicit QRCodeReader(QObject *parent = 0);
@@ -44,12 +45,15 @@ public:
     quint64 counter() const;
     int timeStep() const;
     int pinLength() const;
+    QRect scanRect() const;
+    void setScanRect(const QRect &rect);
 
 public slots:
     void grab();
 
 signals:
     void validChanged();
+    void scanRectChanged();
 
 private slots:
     void handleResults(const QString &type, const QString &text);
@@ -62,6 +66,7 @@ private:
     quint64 m_counter;
     int m_timeStep;
     int m_pinLength;
+    QRect m_scanRect;
 
     QThread m_readerThread;
 };

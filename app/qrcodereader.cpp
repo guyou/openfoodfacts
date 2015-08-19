@@ -43,6 +43,20 @@ QRCodeReader::QRCodeReader(QObject *parent) :
     }
 }
 
+QRect QRCodeReader::scanRect() const
+{
+    return m_scanRect;
+}
+
+void QRCodeReader::setScanRect(const QRect &rect)
+{
+    if (m_scanRect != rect) {
+        qDebug() << "new rectangle has been setted with size :" << rect.height() << " * " << rect.width();
+        m_scanRect = rect;
+        emit scanRectChanged();
+    }
+}
+
 bool QRCodeReader::valid() const
 {
     return !m_accountName.isEmpty() && !m_secret.isEmpty();
@@ -89,6 +103,11 @@ void QRCodeReader::grab()
 
     QImage img = m_mainWindow->grabWindow();
 
+    if (m_scanRect.isValid()) {
+        qDebug() << "resize image with rectangle";
+        img = img.copy(m_scanRect);
+    }
+
     qDebug() << "got image" << img.size();
 
     Reader *reader = new Reader;
@@ -107,7 +126,7 @@ void QRCodeReader::handleResults(const QString &type, const QString &text)
     if (type == "QR-Code" && text.startsWith(QStringLiteral("otpauth://"))) {
         QUrl url(text);
 
-//        qDebug() << url.host() << url.path() << url.query() << url.authority();
+        //        qDebug() << url.host() << url.path() << url.query() << url.authority();
 
 
 
@@ -133,11 +152,11 @@ void QRCodeReader::handleResults(const QString &type, const QString &text)
             }
         }
 
-//        qDebug() << "Account:" << m_accountName;
-//        qDebug() << "Secret:" << m_secret;
-//        qDebug() << "Counter:" << m_counter;
-//        qDebug() << "Timestep:" << m_timeStep;
-//        qDebug() << "Pin length:" << m_pinLength;
+        //        qDebug() << "Account:" << m_accountName;
+        //        qDebug() << "Secret:" << m_secret;
+        //        qDebug() << "Counter:" << m_counter;
+        //        qDebug() << "Timestep:" << m_timeStep;
+        //        qDebug() << "Pin length:" << m_pinLength;
 
         emit validChanged();
 
@@ -148,6 +167,7 @@ void QRCodeReader::handleResults(const QString &type, const QString &text)
 void Reader::doWork(const QImage &image)
 {
 
+    image.save("demo.png");
     zbar::QZBarImage img(image.convertToFormat(QImage::Format_RGB32));
     zbar::Image tmp = img.convert(*(long*)"Y800");
 
@@ -159,7 +179,7 @@ void Reader::doWork(const QImage &image)
 
     // scan the image for barcodes
     int n = scanner.scan(tmp);
-//    qDebug() << "scanner ret" << n;
+    //    qDebug() << "scanner ret" << n;
 
     img.set_symbols(tmp.get_symbols());
 
