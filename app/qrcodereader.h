@@ -29,22 +29,16 @@ class QRCodeReader : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool valid READ valid NOTIFY validChanged)
-    Q_PROPERTY(QString accountName READ accountName NOTIFY validChanged)
-    Q_PROPERTY(QString secret READ secret NOTIFY validChanged)
-    Q_PROPERTY(quint64 counter READ counter NOTIFY validChanged)
-    Q_PROPERTY(int timeStep READ timeStep NOTIFY validChanged)
-    Q_PROPERTY(int pinLength READ pinLength NOTIFY validChanged)
+    Q_PROPERTY(QString type READ type NOTIFY validChanged)
+    Q_PROPERTY(QString text READ text NOTIFY validChanged)
     Q_PROPERTY(QRect scanRect READ scanRect WRITE setScanRect NOTIFY scanRectChanged)
 
 public:
     explicit QRCodeReader(QObject *parent = 0);
 
     bool valid() const;
-    QString accountName() const;
-    QString secret() const;
-    quint64 counter() const;
-    int timeStep() const;
-    int pinLength() const;
+    QString type() const;
+    QString text() const;
     QRect scanRect() const;
     void setScanRect(const QRect &rect);
 
@@ -61,11 +55,8 @@ private slots:
 private:
     QQuickWindow *m_mainWindow;
 
-    QString m_accountName;
-    QString m_secret;
-    quint64 m_counter;
-    int m_timeStep;
-    int m_pinLength;
+    QString m_type;
+    QString m_text;
     QRect m_scanRect;
 
     QThread m_readerThread;

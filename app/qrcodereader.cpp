@@ -30,8 +30,7 @@
 
 QRCodeReader::QRCodeReader(QObject *parent) :
     QObject(parent),
-    m_mainWindow(0),
-    m_counter(0)
+    m_mainWindow(0)
 {
     QGuiApplication *app = qobject_cast<QGuiApplication*>(qApp);
 
@@ -59,33 +58,16 @@ void QRCodeReader::setScanRect(const QRect &rect)
 
 bool QRCodeReader::valid() const
 {
-    return !m_accountName.isEmpty() && !m_secret.isEmpty();
+    return !m_type.isEmpty() && !m_text.isEmpty();
 }
 
-QString QRCodeReader::accountName() const
+QString QRCodeReader::type() const
 {
-    return m_accountName;
+    return m_type;
 }
-
-
-QString QRCodeReader::secret() const
+QString QRCodeReader::text() const
 {
-    return m_secret;
-}
-
-quint64 QRCodeReader::counter() const
-{
-    return m_counter;
-}
-
-int QRCodeReader::timeStep() const
-{
-    return m_timeStep;
-}
-
-int QRCodeReader::pinLength() const
-{
-    return m_pinLength;
+    return m_text;
 }
 
 void QRCodeReader::grab()
@@ -94,17 +76,13 @@ void QRCodeReader::grab()
         return;
     }
 
-    m_accountName.clear();
-    m_secret.clear();
-    m_counter = 0;
-    m_timeStep = 30;
-    m_pinLength = 6;
+    m_type.clear();
+    m_text.clear();
     emit validChanged();
 
     QImage img = m_mainWindow->grabWindow();
 
     if (m_scanRect.isValid()) {
-        qDebug() << "resize image with rectangle";
         img = img.copy(m_scanRect);
     }
 
@@ -122,52 +100,12 @@ void QRCodeReader::grab()
 void QRCodeReader::handleResults(const QString &type, const QString &text)
 {
     qDebug() << "parsed:" << type << text;
-
-    if (type == "QR-Code" && text.startsWith(QStringLiteral("otpauth://"))) {
-        QUrl url(text);
-
-        //        qDebug() << url.host() << url.path() << url.query() << url.authority();
-
-
-
-        m_accountName = url.path();
-        if (m_accountName.startsWith('/')) {
-            m_accountName.remove(0, 1);
-        }
-
-        QUrlQuery query(url.query());
-
-        for (int i = 0; i < query.queryItems().count(); ++i) {
-            if (query.queryItems().at(i).first == "secret") {
-                m_secret = query.queryItems().at(i).second;
-            }
-            if (query.queryItems().at(i).first == "counter") {
-                m_counter = query.queryItems().at(i).second.toULong();
-            }
-            if (query.queryItems().at(i).first == "period") {
-                m_timeStep = query.queryItems().at(i).second.toInt();
-            }
-            if (query.queryItems().at(i).first == "digits") {
-                m_pinLength = query.queryItems().at(i).second.toInt();
-            }
-        }
-
-        //        qDebug() << "Account:" << m_accountName;
-        //        qDebug() << "Secret:" << m_secret;
-        //        qDebug() << "Counter:" << m_counter;
-        //        qDebug() << "Timestep:" << m_timeStep;
-        //        qDebug() << "Pin length:" << m_pinLength;
-
-        emit validChanged();
-
-    }
-
+    emit validChanged();
 }
 
 void Reader::doWork(const QImage &image)
 {
 
-    image.save("demo.png");
     zbar::QZBarImage img(image.convertToFormat(QImage::Format_RGB32));
     zbar::Image tmp = img.convert(*(long*)"Y800");
 
