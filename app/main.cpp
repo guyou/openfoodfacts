@@ -29,10 +29,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QQuickView view;
-    qmlRegisterType<QRCodeReader>("OAth", 1, 0, "QRCodeReader");
+    qmlRegisterType<QRCodeReader>("CodeReader", 1, 0, "QRCodeReader");
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-    view.setSource(QUrl("qrc:///qml/ubuntu-authenticator.qml"));
+    view.setSource(QUrl("qrc:///qml/main.qml"));
     view.show();
 
     return a.exec();
