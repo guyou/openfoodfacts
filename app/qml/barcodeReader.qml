@@ -24,14 +24,8 @@ Page {
 
         onValidChanged: {
             if (valid) {
-                console.log("tag found in qml : "+ qrCodeReader.text);
-                /*var account = accounts.createAccount();
-                    account.name = qrCodeReader.accountName;
-                    account.type = qrCodeReader.type;
-                    account.secret = qrCodeReader.secret;
-                    account.counter = qrCodeReader.counter;
-                    account.timeStep = qrCodeReader.timeStep;
-                    account.pinLength = qrCodeReader.pinLength;*/
+                var barcodeValue = qrCodeReader.text;
+                pageStack.push(Qt.resolvedUrl("qrc:///qml/ProductView.qml"), {"barcode": barcodeValue});
                 //pageStack.pop();
             }
         }
