@@ -6,6 +6,9 @@ Don't forget to install dependences because the barcode detector use static link
 
 `sudo apt-get install libzbar0 zbar-tools  libzbar-dev libv4l-dev libqrencode-dev`
 
+If you want publish your application on smartphone, don't forget to install dependences on your kit  
+qt creator -> option -> ubuntu -> choose your click and click on "maintain"  
+`sudo apt-get install libzbar0:armhf zbar-tools:armhf  libzbar-dev:armhf libv4l-dev:armhf libqrencode-dev:armhf`
 
 # Api Official Documentation
 The official documentation for API : http://en.wiki.openfoodfacts.org/Project:API
