@@ -1,6 +1,6 @@
 TARGET = openFoodFacts
 
-QT += quick widgets
+QT += quick widgets network
 
 #load Ubuntu specific features
 load(ubuntu-click)
@@ -13,8 +13,10 @@ LIBS += /usr/lib/libzbar.a -lv4l2 -ljpeg
 
 SOURCES += main.cpp \
             qrcodereader.cpp \
+    product.cpp
 
 HEADERS += qrcodereader.h \
+    product.h
 
 RESOURCES += \
     qml.qrc

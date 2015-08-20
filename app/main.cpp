@@ -19,6 +19,7 @@
  ****************************************************************************/
 
 #include "qrcodereader.h"
+#include "product.h"
 
 #include <QApplication>
 #include <QtQuick/QQuickView>
@@ -30,6 +31,9 @@ int main(int argc, char *argv[])
 
     QQuickView view;
     qmlRegisterType<QRCodeReader>("CodeReader", 1, 0, "QRCodeReader");
+
+Product p;
+p.addPicture(new QImage(),"");
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setSource(QUrl("qrc:///qml/main.qml"));
