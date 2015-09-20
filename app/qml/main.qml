@@ -8,13 +8,14 @@ import QtQuick 2.4
 import Ubuntu.Components 1.1
 import Ubuntu.Content 1.1
 import QtGraphicalEffects 1.0
+import Qt.labs.settings 1.0
 
 import "qrc:///component/qml/component"
 
 
 MainView {
-    id: mainView
-    objectName: "mainView"
+    id: openFoodFacts
+    objectName: "openFoodFacts"
     applicationName: "openfoodfacts.ubuntouch-fr"
 
     width: units.gu(40)
@@ -27,6 +28,10 @@ MainView {
 //        //Theme.name = "Ubuntu.Components.Themes.SuruDark"
 //        console.log("domaine")
 //    }
+    // persistent app settings:
+    property var settings: Settings {
+        property bool visiblecomposition:	true
+    }
 
     PageStack {
         id: pageStack

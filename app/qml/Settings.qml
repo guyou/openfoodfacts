@@ -20,12 +20,9 @@ Page {
             }
         ]
     }
-    Label {
-        anchors.centerIn: parent
-        text: "Not implemented"
-    }
 
-/*
+
+
     Flickable {
         id: flickable
 
@@ -40,7 +37,7 @@ Page {
                 left: parent.left
                 right: parent.right
             }
-
+/*
             ListItem.Header {
                 text: i18n.tr("Global")
             }
@@ -142,11 +139,11 @@ Page {
                 }
             }
 
-
+*/
             ListItem.Header {
                 text: i18n.tr("Viewing Information")
             }
-
+/*
             ListItem.Standard {
                 showDivider: false
                 text: i18n.tr("Product characteristics")
@@ -176,18 +173,19 @@ Page {
 
                 }
             }
-
+*/
             ListItem.Standard {
                 showDivider: false
                 text: i18n.tr("Composition")
                 control: Switch {
-                    id: composition
-                    checked: openfoodfacts.settings.composition
-
+                    id: compositionwitch
+                    checked: openFoodFacts.settings.visiblecomposition
+                    onClicked: { openFoodFacts.settings.visiblecomposition = checked;
+                    }
                 }
             }
 
 
         }
-    }*/
+    }
 }

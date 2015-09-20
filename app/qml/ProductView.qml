@@ -371,8 +371,14 @@ Page {
 
                     UbuntuShape {
                         id: sectiontablenutr
+                        visible: (openFoodFacts.settings.visiblecomposition)
                         width: content.width
-                        height: tablenutri.height + energy.height + fat.height + carbohydrates.height + sugars.height + fiber.height + proteins.height + salt.height + sodium.height + 20
+                        height: if (openFoodFacts.settings.visiblecomposition === true)
+                                    sectiontablenutr.height = tablenutri.height + energy.height + fat.height + carbohydrates.height + sugars.height + fiber.height + proteins.height + salt.height + sodium.height + 35
+                                else
+                                    sectiontablenutr.height = 0
+
+
                         color : "#ffffff";
 
                         Column {
