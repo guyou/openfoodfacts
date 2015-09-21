@@ -30,7 +30,12 @@ MainView {
 //    }
     // persistent app settings:
     property var settings: Settings {
-        property bool visiblecomposition:	true
+        property bool visiblecomposition: true
+        property bool visiblenutrition:	true
+        property bool visibleingredient:	true
+        property bool visiblecharacteristics:	true
+        //property string userallergen:	text
+
     }
 
     PageStack {
@@ -236,11 +241,11 @@ MainView {
     ContentTransferHint {
         id: importHint
         anchors.fill: parent
-        activeTransfer: mainView.activeTransfer
+        activeTransfer: openFoodFacts.activeTransfer
         z: 100
     }
     Connections {
-        target: mainView.activeTransfer
+        target: openFoodFacts.activeTransfer
         onStateChanged: {
             switch (mainView.activeTransfer.state) {
             case ContentTransfer.Charged:
