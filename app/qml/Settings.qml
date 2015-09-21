@@ -13,10 +13,11 @@ Page {
     head.backAction: Action {
         iconName: "back"
             onTriggered: { //openFoodFacts.settings.userallergen = userallergen.text;
-                goBack();
+                pageStack.pop();
             }
 
     }
+
 
     head {
         actions: [
