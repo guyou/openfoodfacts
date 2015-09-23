@@ -170,30 +170,11 @@ MainView {
             }
         }
     }   }
-
-  /*  RadialBottomEdge {
+/*
+    RadialBottomEdge {
         id:radialBottom;
         actions: [
-            RadialAction {
-                iconName: "settings"
-                iconColor: UbuntuColors.coolGrey
-                onTriggered: {
-                    pageStack.push(Qt.resolvedUrl("Settings.qml"));
-                }
-            },
-            RadialAction {
-                iconName: "save"
-                iconColor: "white"
-                enabled: false
-                backgroundColor: UbuntuColors.green
-                onTriggered: console.log("save")
-            },
 
-            RadialAction {
-                iconName: "add"
-                iconColor: "white"
-                backgroundColor: UbuntuColors.green
-            },
             RadialAction {
                 iconName: "search"
                 iconColor: UbuntuColors.coolGrey
@@ -201,10 +182,32 @@ MainView {
                     pageStack.pop();
                     //pageStack.push(Qt.resolvedUrl("main.qml"));
                 }
-            }
-        ]
-    }*/
+            },
 
+            RadialAction {
+                iconName: "add"
+                iconColor: "white"
+                backgroundColor: UbuntuColors.green
+            },
+
+            RadialAction {
+                iconName: "settings"
+                iconColor: UbuntuColors.coolGrey
+                onTriggered: {
+                    pageStack.push(Qt.resolvedUrl("Settings.qml"));
+                }
+            },
+
+            RadialAction {
+                iconName: "browser-timeline"
+                iconColor: UbuntuColors.coolGrey
+                onTriggered: console.log("History")
+            }
+
+
+        ]
+    }
+*/
     Connections {
         target: ContentHub
         onExportRequested: {
