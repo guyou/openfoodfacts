@@ -35,6 +35,7 @@ MainView {
         property bool visibleingredient:	true
         property bool visiblecharacteristics:	true
         //property string userallergen:	text
+        property bool developerModeEnabled:	false
 
     }
 
