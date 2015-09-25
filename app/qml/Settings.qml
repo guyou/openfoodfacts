@@ -2,6 +2,7 @@ import QtQuick 2.4
 import Ubuntu.Components 1.2
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import Qt.labs.settings 1.0
+import Ubuntu.Components 1.2 as Toolkit
 
 Page {
     id: settingsPage
@@ -46,10 +47,24 @@ Page {
                 left: parent.left
                 right: parent.right
             }
-/*
+
             ListItem.Header {
+                visible: (openFoodFacts.settings.developerModeEnabled) //MODE DEVELOPPER
                 text: i18n.tr("Global")
             }
+
+
+            ListItem.Standard {
+                visible: (openFoodFacts.settings.developerModeEnabled) //MODE DEVELOPPER
+                showDivider: false
+                text: i18n.tr("Allergen")
+                progression: true
+                onTriggered: {
+                    pageStack.push(Qt.resolvedUrl("Allergen.qml"));
+                }
+            }
+
+/*
 
             Item {
                 id: templateallergen
